@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+# cprm - Project manager with directory jumping
+# Usage:
+#   cprm make              - Create config file
+#   cprm init <name>       - Initialize project
+#   cprm j <name>          - Jump to project
+
+# Standard installation paths (checked in order)
+readonly CPRM_LIBEXEC_DIRS=(
+    "$HOME/.local/share/cprm"
+    "/usr/local/share/cprm"
+    "/usr/share/cprm"
+)
+
+# Find the library directory
+_cprm_libexec=""
+for dir in "${CPRM_LIBEXEC_DIRS[@]}"; do
+    if [ -f "$dir/conduit.py" ]; then
+        _cprm_libexec="$dir"
+        break
+    fi
+done
+
+if [ -z "$_cprm_libexec" ]; then
+    echo "Error: cprm is not properly installed." >&2
+    echo "Run 'install.sh' or 'make install' first." >&2
+    return 1 2>/dev/null || exit 1
+fi
+
+# Add library directory to PYTHONPATH for imports
+export PYTHONPATH="$_cprm_libexec:$PYTHONPATH"
+
+# Execute command
+if [ "$1" = "j" ] && [ -n "$2" ]; then
+    # Jump command - changes directory in current shell
+    local _cprm_path
+    _cprm_path=$(python3 "$_cprm_libexec/conduit.py" j "$2" 2>&1)
+    local _cprm_ret=$?
+
+    if [ $_cprm_ret -eq 0 ] && [ -n "$_cprm_path" ]; then
+        cd "$_cprm_path" || return 1
+    fi
+
+    return $_cprm_ret
+else
+    # All other commands
+    python3 "$_cprm_libexec/conduit.py" "$@"
+    return $?
+fi

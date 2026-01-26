@@ -14,15 +14,26 @@ INSTALL_DIR="$HOME/.local/bin"
 mkdir -p "$INSTALL_DIR"
 
 # Create symlink
-if [ -L "$INSTALL_DIR/cprm" ] || [ -f "$INSTALL_DIR/cprm" ]; then
+if [ -L "$INSTALL_DIR/cprm-bin" ] || [ -f "$INSTALL_DIR/cprm-bin" ]; then
     echo "Removing existing cprm installation..."
-    rm "$INSTALL_DIR/cprm"
+    rm "$INSTALL_DIR/cprm-bin"
 fi
 
-ln -s "$SCRIPT_DIR/cprm" "$INSTALL_DIR/cprm"
-chmod +x "$SCRIPT_DIR/cprm"
-chmod +x "$SCRIPT_DIR/conduit.py"
-echo "✓ Created symlink: $INSTALL_DIR/cprm -> $SCRIPT_DIR/cprm"
+ln -s "$SCRIPT_DIR/cprm-bin" "$INSTALL_DIR/cprm-bin"
+chmod +x "$SCRIPT_DIR/cprm-bin"
+echo "✓ Created symlink: $INSTALL_DIR/cprm-bin -> $SCRIPT_DIR/cprm-bin"
+
+# Install Python library files
+SHARE_DIR="$HOME/.local/share/cprm"
+mkdir -p "$SHARE_DIR"
+cp "$SCRIPT_DIR/conduit.py" "$SHARE_DIR/conduit.py"
+cp "$SCRIPT_DIR/file_operations.py" "$SHARE_DIR/file_operations.py"
+chmod +x "$SHARE_DIR/conduit.py"
+echo "✓ Installed Python library: $SHARE_DIR/"
+
+# Install shell integration file
+cp "$SCRIPT_DIR/cprm.sh" "$SHARE_DIR/cprm.sh"
+echo "✓ Installed shell integration: $SHARE_DIR/cprm.sh"
 
 # Check if ~/.local/bin is in PATH
 if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
@@ -56,24 +67,26 @@ else
     fi
 fi
 
-# Check if alias already exists
-ALIAS_LINE="alias cprm='source cprm'"
+# Add source line to shell config
+SOURCE_LINE="source \"\$HOME/.local/share/cprm/cprm.sh\""
 if [ -n "$SHELL_CONFIG" ]; then
-    if grep -q "alias cprm=" "$SHELL_CONFIG" 2>/dev/null; then
-        echo "✓ cprm alias already exists in $SHELL_CONFIG"
+    if grep -q "cprm/cprm.sh" "$SHELL_CONFIG" 2>/dev/null; then
+        echo "✓ cprm shell integration already sourced in $SHELL_CONFIG"
     else
         echo ""
-        echo "Adding alias to $SHELL_CONFIG..."
-        echo "" >> "$SHELL_CONFIG"
-        echo "# cprm project manager" >> "$SHELL_CONFIG"
-        echo "$ALIAS_LINE" >> "$SHELL_CONFIG"
-        echo "✓ Added alias to $SHELL_CONFIG"
+        echo "Adding cprm shell integration to $SHELL_CONFIG..."
+        cat >> "$SHELL_CONFIG" << 'EOF'
+
+# cprm project manager
+source "$HOME/.local/share/cprm/cprm.sh"
+EOF
+        echo "✓ Added source line to $SHELL_CONFIG"
     fi
 else
     echo ""
     echo "⚠ Could not detect shell config file"
     echo "Please manually add this line to your ~/.bashrc or ~/.zshrc:"
-    echo "  $ALIAS_LINE"
+    echo "  $SOURCE_LINE"
 fi
 
 echo ""
