@@ -4,7 +4,7 @@ from pathlib import Path
 import toml
 
 # --- hlavní config ---
-DEFAULT_CONFIG_PATH = Path.home() / ".config" / "project-manager" / "config.toml"
+DEFAULT_CONFIG_PATH = Path.home() / ".config" / "cprm" / "config.toml"
 
 def create_main_config(config_path: Path):
     config_path.parent.mkdir(parents=True, exist_ok=True)
@@ -43,11 +43,11 @@ def main():
     parser = argparse.ArgumentParser(prog="conduit")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    # make command → vytvoří hlavní config
+    # make command → create main config
     make_parser = subparsers.add_parser("make", help="Create main config file")
     make_parser.add_argument("-f", "--force", action="store_true", help="Force overwrite")
 
-    # init command → vytvoří .conduit a přidá projekt
+    # init command → create .conduit file
     init_parser = subparsers.add_parser("init", help="Initialize project in current folder")
     init_parser.add_argument("name", help="Project name")
     init_parser.add_argument(
@@ -69,7 +69,7 @@ def main():
 
     elif args.command == "init":
         cwd = Path.cwd()
-        dot_file = cwd / ".conduit"
+        dot_file = cwd / ".cprm"
         if dot_file.exists() and not args.force:
             print(f"{dot_file} already exists. Use --force to overwrite.")
             sys.exit(1)
