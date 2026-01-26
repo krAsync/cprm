@@ -15,7 +15,7 @@ readonly CPRM_LIBEXEC_DIRS=(
 # Find the library directory
 _cprm_libexec=""
 for dir in "${CPRM_LIBEXEC_DIRS[@]}"; do
-    if [ -f "$dir/conduit.py" ]; then
+    if [ -f "$dir/cprm.py" ]; then
         _cprm_libexec="$dir"
         break
     fi
@@ -34,7 +34,7 @@ export PYTHONPATH="$_cprm_libexec:$PYTHONPATH"
 if [ "$1" = "j" ] && [ -n "$2" ]; then
     # Jump command - changes directory in current shell
     local _cprm_path
-    _cprm_path=$(python3 "$_cprm_libexec/conduit.py" j "$2" 2>&1)
+    _cprm_path=$(python3 "$_cprm_libexec/cprm.py" j "$2" 2>&1)
     local _cprm_ret=$?
 
     if [ $_cprm_ret -eq 0 ] && [ -n "$_cprm_path" ]; then
@@ -44,6 +44,6 @@ if [ "$1" = "j" ] && [ -n "$2" ]; then
     return $_cprm_ret
 else
     # All other commands
-    python3 "$_cprm_libexec/conduit.py" "$@"
+    python3 "$_cprm_libexec/cprm.py" "$@"
     return $?
 fi

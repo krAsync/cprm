@@ -55,9 +55,9 @@ This project is structured to be packaged for:
 ```
 conduit/
 ├── cprm-bin             # Main bash wrapper
-├── conduit.py           # Python backend
+├── cprm.py           # Python backend
 ├── cprm.sh              # Shell integration
-├── file_operations.py   # Python helper module
+├── cprm_file_operations.py   # Python helper module
 ├── requirements.txt     # Python dependencies
 ├── Makefile             # For system-wide installation
 └── install.sh           # Local installation script
@@ -68,16 +68,16 @@ conduit/
 **Local installation (`./install.sh`):**
 ```
 ~/.local/bin/cprm-bin              # Executable (symlink)
-~/.local/share/cprm/conduit.py     # Python library
-~/.local/share/cprm/file_operations.py
+~/.local/share/cprm/cprm.py     # Python library
+~/.local/share/cprm/cprm_file_operations.py
 ~/.local/share/cprm/cprm.sh        # Shell integration
 ```
 
 **System installation (`make install`):**
 ```
 /usr/local/bin/cprm-bin                     # Executable
-/usr/local/share/cprm/conduit.py            # Python library
-/usr/local/share/cprm/file_operations.py
+/usr/local/share/cprm/cprm.py            # Python library
+/usr/local/share/cprm/cprm_file_operations.py
 /usr/local/share/cprm/cprm.sh               # Shell integration
 ```
 

@@ -2,7 +2,7 @@ import argparse
 import sys
 from pathlib import Path
 import toml
-from file_operations import create_main_config, create_dot_conduit
+from cprm_file_operations import create_main_config
 
 # --- hlavní config ---
 DEFAULT_CONFIG_PATH = Path.home() / ".config" / "cprm" / "config.toml"
@@ -37,7 +37,7 @@ def jump(config_path: Path, name: str) -> str:
 
 # --- CLI ---
 def main():
-    parser = argparse.ArgumentParser(prog="conduit")
+    parser = argparse.ArgumentParser(prog="cprm")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     # make command → create main config

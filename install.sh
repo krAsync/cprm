@@ -26,9 +26,9 @@ echo "✓ Created symlink: $INSTALL_DIR/cprm-bin -> $SCRIPT_DIR/cprm-bin"
 # Install Python library files
 SHARE_DIR="$HOME/.local/share/cprm"
 mkdir -p "$SHARE_DIR"
-cp "$SCRIPT_DIR/conduit.py" "$SHARE_DIR/conduit.py"
-cp "$SCRIPT_DIR/file_operations.py" "$SHARE_DIR/file_operations.py"
-chmod +x "$SHARE_DIR/conduit.py"
+cp "$SCRIPT_DIR/cprm.py" "$SHARE_DIR/cprm.py"
+cp "$SCRIPT_DIR/cprm_file_operations.py" "$SHARE_DIR/cprm_file_operations.py"
+chmod +x "$SHARE_DIR/cprm.py"
 echo "✓ Installed Python library: $SHARE_DIR/"
 
 # Install shell integration file
