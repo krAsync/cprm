@@ -1,5 +1,6 @@
 """File and dotfile creation operations for Conduit."""
 from pathlib import Path
+import json
 
 
 def create_main_config(config_path: Path):
@@ -9,11 +10,14 @@ def create_main_config(config_path: Path):
         config_path: Path where the config file should be created
     """
     config_path.parent.mkdir(parents=True, exist_ok=True)
-    config_path.write_text(
-        "[general]\n"
-        "debug = false\n"
-        "[projects]\n"
-    )
+    config_data = {
+        "general": {
+            "debug": False
+        },
+        "projects": {}
+    }
+    with open(config_path, 'w') as f:
+        json.dump(config_data, f, indent=2)
     print(f"Main config created at {config_path}")
 
 

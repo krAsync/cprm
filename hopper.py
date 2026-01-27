@@ -1,5 +1,6 @@
 import os
 import conduit
+import json 
 def jump(config_path: Path, name: str) -> str:
     """Search for a project by name and return its path."""
     config = conduit.load_config(config_path)

@@ -1,19 +1,21 @@
 import argparse
 import sys
 from pathlib import Path
-import toml
-from cprm_file_operations import create_main_config
+import json
+from cprm_file_operations import create_main_config, create_dot_conduit
 
 # --- hlavní config ---
-DEFAULT_CONFIG_PATH = Path.home() / ".config" / "cprm" / "config.toml"
+DEFAULT_CONFIG_PATH = Path.home() / ".config" / "cprm" / "config.json"
 
 def load_config(config_path: Path) -> dict:
     if not config_path.exists():
         raise RuntimeError("Main config does not exist. Run 'make' first.")
-    return toml.load(config_path)
+    with open(config_path, 'r') as f:
+        return json.load(f)
 
 def save_config(config_path: Path, data: dict):
-    config_path.write_text(toml.dumps(data))
+    with open(config_path, 'w') as f:
+        json.dump(data, f, indent=2)
 
 def add_project_to_config(config_path: Path, name: str, path: str):
     config = load_config(config_path)
