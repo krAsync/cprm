@@ -7,3 +7,4 @@ PKGBUILD*
 *.deb
 *.rpm
 *.pkg.tar.zst
+__pycache__/*

@@ -45,7 +45,8 @@ def main():
     # make command → create main config
     make_parser = subparsers.add_parser("make", help="Create main config file")
     make_parser.add_argument("-f", "--force", action="store_true", help="Force overwrite")
-
+    #all
+    make_parser.add_argument("-a", "--all", action="store_true", help="show details")
     # init command → create .conduit file
     init_parser = subparsers.add_parser("init", help="Initialize project in current folder")
     init_parser.add_argument("name", help="Project name")
@@ -53,10 +54,17 @@ def main():
         "--config", help="Path to main config file",
         default=str(DEFAULT_CONFIG_PATH)
     )
-    init_parser.add_argument(
-        "-f", "--force", action="store_true", help="Force overwrite .conduit"
+    init_parser.add_argument("-f", "--force", action="store_true", help="Force overwrite .conduit")
+    
+    # list argument parser
+    list_parser = subparsers.add_parser("list", help="List all conduits")
+    list_parser.add_argument(
+        "--config", help="Path to main config file",
+        default=str(DEFAULT_CONFIG_PATH)
     )
+    list_parser.add_argument("-a", "--all", action="store_true", help="Show full paths")
 
+    
     # jump command → get project path
     jump_parser = subparsers.add_parser("j", help="Jump to project directory")
     jump_parser.add_argument("name", help="Project name to search")
@@ -91,6 +99,24 @@ def main():
         try:
             path = jump(config_path, args.name)
             print(path)  # Output path for shell: cd $(cprm j conduit)
+        except RuntimeError as e:
+            print(e, file=sys.stderr)
+            sys.exit(1)
+    
+    elif args.command == "list":
+        config_path = Path(args.config)
+        try:
+            config = load_config(config_path)
+            if "projects" not in config or not config["projects"]:
+                print("No conduits found.")
+                sys.exit(0)
+
+            print("Conduits:")
+            for name, path in config["projects"].items():
+                if args.all:
+                    print(f"  {name}: {path}")
+                else:
+                    print(f"  {name}")
         except RuntimeError as e:
             print(e, file=sys.stderr)
             sys.exit(1)
