@@ -113,10 +113,17 @@ def main():
 
             print("Conduits:")
             for name, path in config["projects"].items():
+                
                 if args.all:
-                    print(f"  {name}: {path}")
+                    dashes = len(f"|    {name}: {path}    |")
+                    print('-'*(dashes - 2))
+                    print(f"|   {name}: {path}   |")
+                    print('-'*(dashes - 2))
                 else:
-                    print(f"  {name}")
+                    dashes = len(f"|  {name}  |")
+                    print('-'*dashes)
+                    print(f"|  {name}  |")
+                    print('-'*dashes)
         except RuntimeError as e:
             print(e, file=sys.stderr)
             sys.exit(1)
